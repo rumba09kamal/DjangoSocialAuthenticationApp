@@ -1,0 +1,56 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+</head>
+<body>
+    <div id="header">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="{% url "dashboard" %}"><span class="logo">Bookmarks</span></a>
+            </div>
+              <div class="navbar-header pull-right">
+                {% if request.user.is_authenticated %}
+                    <h3>Hello {{ request.user.first_name }},</h3><a href="{% url "logout" %}">LogOut</a>
+                {% else %}
+                    <a class="navbar-brand" href="{% url "login" %}">Log-in</a>
+                {% endif %}
+            </div>
+          </div>
+            <ul class="nav navbar-nav">
+
+        {% if request.user.is_authenticated %}
+                <li {% if section == 'dashboard' %}class="active"{% endif %}>
+                            <a href="{% url "dashboard" %}">Dashboard</a>
+                </li>
+                <li {% if section == 'images'%}class="active"{%  endif %}><a href="#">Images</a></li>
+                <li {% if section == 'people' %}class="active"{% endif %}><a href="#">People</a></li>
+
+        {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message|safe }}
+                    <a href="#" class="close">x</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
